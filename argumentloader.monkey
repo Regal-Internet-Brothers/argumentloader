@@ -256,6 +256,18 @@ Class ArgumentLoader Abstract
 		Return True
 	End
 	
+	Function ItemFound:Bool(S:String, Key:String, KeyPrefix:String, KeySuffix:String, Start:Int=0)
+		Return ValidStringSearch(FindInString(S, Key, KeyPrefix, KeySuffix, Start))
+	End
+	
+	Function ItemFound:Bool(S:String, Key:String, KeyPrefix:String, Start:Int=0)
+		Return ValidStringSearch(FindInString(S, Key, KeyPrefix, Start))
+	End
+	
+	Function ItemFound:Bool(S:String, Key:String, KeyPrefixes:String[], KeySuffixes:String[]=[], ExitOnMatch:Bool=False, Start:Int=0)
+		Return ValidStringSearch(FindInString(S, Key, KeyPrefixes, KeySuffixes, ExitOnMatch, Start))
+	End
+	
 	Function ItemFound:Bool(S:String, Keys:String[], KeyPrefix:String, KeySuffix:String="")
 		Return ValidStringSearch(FindInString(S, Keys, KeyPrefix, KeySuffix, True))
 	End
@@ -637,6 +649,10 @@ Class ArgumentLoader Abstract
 	
 	Method ItemFound:Bool(S:String, Keys:String[])
 		Return ValidStringSearch(FindInString(S, Keys, Argument_Prefixes, Argument_Suffixes, True))
+	End
+	
+	Method ItemFound:Bool(S:String, Key:String, Start:Int=0)
+		Return ValidStringSearch(FindInString(S, Key, Argument_Prefixes, Argument_Suffixes, True, Start))
 	End
 	
 	' These are just wrappers for the main implementation of 'Assert_Count':
