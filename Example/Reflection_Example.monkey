@@ -12,7 +12,10 @@ Import argumentloader
 ' Functions:
 Function Main:Int()
 	' Local variable(s):
-	Local Loader:= New ConfigLoader()
+	Local Loader:= New BasicArgumentLoader() ' New ConfigLoader()
+	Local Args:= New Configuration()
+	
+	Loader.AddReader(Args)
 	
 	Local Fields:= GetClass(Configuration.Class_Name).GetFields(False)
 	
@@ -32,7 +35,7 @@ Function Main:Int()
 	
 	Loader.Parse(Arguments.ToArray())
 	
-	Local Args:= Loader.Config
+	'Local Args:= Loader.Config
 	
 	Args.Output()
 	
@@ -61,7 +64,11 @@ Class Configuration Extends ArgumentContainer Final
 	
 	Method Output:Void()
 		For Local F:= Eachin GetClass(Class_Name).GetFields(False)
-			Print(F.Name + " = " + String.FromChar(UnboxInt(F.GetValue(Self))))
+			Local Value:= UnboxInt(F.GetValue(Self))
+			
+			If (Value <> 0) Then
+				Print(F.Name + " = " + String.FromChar(Value) + " (" + Value + ")")
+			Endif
 		Next
 		
 		Return
@@ -96,6 +103,7 @@ Class Configuration Extends ArgumentContainer Final
 	Field Z:Int
 End
 
+#Rem
 Class ConfigLoader Extends ArgumentLoader Final
 	' Methods:
 	Method Construct:Void()
@@ -119,3 +127,4 @@ Class ConfigLoader Extends ArgumentLoader Final
 	' Fields:
 	Field Config:Configuration
 End
+#End

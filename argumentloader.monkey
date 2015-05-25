@@ -45,7 +45,13 @@ Private
 Public
 
 ' Interfaces:
-' Nothing so far.
+Interface ArgumentReader
+	' Destructor(s):
+	Method Flush:Void()
+	
+	' Methods:
+	Method Parse:Bool(Loader:ArgumentLoader, ProcessedEntry:String)
+End
 
 ' Classes:
 
@@ -63,7 +69,7 @@ Public
 	functionality provided by 'ArgumentLoader' in mind.
 #End
 
-Class ArgumentContainer Abstract
+Class ArgumentContainer Implements ArgumentReader Abstract
 	' Constructors:
 	' Nothing so far.
 	
@@ -737,6 +743,82 @@ Class ArgumentLoader Abstract
 	Field OutputQueue:StringDeque
 	
 	Public
+End
+
+' This provides container-based 'ArgumentReader' management.
+Class BasicArgumentLoader Extends ArgumentLoader
+	' Constructor(s):
+	Method New(Arguments:String[], Offset:Int=0)
+		' Call the super-class's implementation.
+		Super.New(Arguments, Offset)
+	End
+	
+	Method New(AppArgs_Offset:Int=Default_AppArgs_Offset)
+		' Call the super-class's implementation.
+		Super.New(AppArgs_Offset)
+	End
+	
+	Method Construct:Void()
+		' Call the super-class's implementation.
+		Super.Construct()
+		
+		Self.Readers = New List<ArgumentReader>()
+		
+		Return
+	End
+	
+	' Methods:
+	Method ParseArgument:Bool(Entry:String)
+		For Local R:= Eachin Readers
+			If (R.Parse(Self, Entry)) Then
+				Return True
+			Endif
+		Next
+		
+		' Return the default response.
+		Return False
+	End
+	
+	Method AddReader:Void(Reader:ArgumentReader, FlushReader:Bool=False)
+		Readers.AddLast(Reader)
+		
+		If (FlushReader) Then
+			Reader.Flush()
+		Endif
+		
+		Return
+	End
+	
+	Method RemoveReader:Void(Reader:ArgumentReader, FlushReader:Bool=True)
+		If (FlushReader) Then
+			Reader.Flush()
+		Endif
+		
+		Readers.RemoveEach(Reader)
+		
+		Return
+	End
+	
+	Method FlushReaders:Void()
+		For Local R:= Eachin Readers
+			R.Flush()
+		Next
+		
+		Return
+	End
+	
+	Method ClearReaders:Void(Flush:Bool=True)
+		If (Flush) Then
+			FlushReaders()
+		Endif
+		
+		Readers.Clear()
+		
+		Return
+	End
+	
+	' Fields:
+	Field Readers:List<ArgumentReader>
 End
 
 Class ArgumentResolutionException Extends Throwable ' Final
