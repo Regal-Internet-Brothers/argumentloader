@@ -33,9 +33,8 @@ Import stringutil
 ' Imports (Private):
 Private
 
-' General operating-system functionality:
 #If TARGET = "glfw" Or TARGET = "stdcpp" Or TARGET = "sexy"
-	Import os
+	Import brl.process
 	
 	#APPARGS_IMPLEMENTED = True
 #Else
