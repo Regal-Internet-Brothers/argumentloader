@@ -6,8 +6,9 @@ Public
 #REFLECTION_FILTER = "${MODPATH}"
 
 ' Imports:
+Import regal.argumentloader
+
 Import reflection
-Import argumentloader
 
 ' Functions:
 Function Main:Int()

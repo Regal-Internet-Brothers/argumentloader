@@ -24,10 +24,10 @@ Public
 #End
 
 ' Imports (Public):
-Import stringutil
+Import regal.stringutil
 
 #If ARGUMENTLOADER_COPY
-	Import util
+	Import regal.util
 #End
 
 ' Imports (Private):
